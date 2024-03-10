@@ -1,25 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Seria.hpp                                          :+:      :+:    :+:   */
+/*   A.hpp                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/05 00:35:33 by yamajid           #+#    #+#             */
-/*   Updated: 2024/03/09 23:32:45 by yamajid          ###   ########.fr       */
+/*   Created: 2024/03/05 21:59:06 by yamajid           #+#    #+#             */
+/*   Updated: 2024/03/10 02:22:09 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
+#pragma once
+#include "Base.hpp"
 
-class Serialize{
+class A : public Base{
     public:
-        static uintptr_t serialize(Data* ptr);
-        static Data* deserialize(uintptr_t raw);
-        Serialize();
-        ~Serialize();
-        Serialize(Serialize const & src);
-        Serialize & operator=(Serialize const & src);
-        static uintptr_t serialize(Data* ptr);
-        static Data* deserialize(uintptr_t raw);
+        ~A();
 };

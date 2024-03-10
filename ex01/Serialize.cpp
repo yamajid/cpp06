@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Seria.cpp                                          :+:      :+:    :+:   */
+/*   Serialize.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 00:35:30 by yamajid           #+#    #+#             */
-/*   Updated: 2024/03/05 20:29:50 by yamajid          ###   ########.fr       */
+/*   Updated: 2024/03/10 01:24:25 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Seria.hpp"
+#include "Serialize.hpp"
 
 Serialize::Serialize(){
     
@@ -25,13 +25,11 @@ Serialize::Serialize(Serialize const & src){
 }
 
 Serialize & Serialize::operator=(Serialize const & src){
-    if (this != &src)
-        *this = src;
     return *this;
 }
 
 uintptr_t Serialize::serialize(Data* ptr){
-    return reinterpret_cast<unsigned int>(ptr);
+    return reinterpret_cast<uintptr_t>(ptr);
 }
 
 Data* Serialize::deserialize(uintptr_t raw){

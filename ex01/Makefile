@@ -5,17 +5,17 @@
 #                                                     +:+ +:+         +:+      #
 #    By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/03/05 20:32:06 by yamajid           #+#    #+#              #
-#    Updated: 2024/03/10 02:21:34 by yamajid          ###   ########.fr        #
+#    Created: 2024/03/09 23:36:35 by yamajid           #+#    #+#              #
+#    Updated: 2024/03/10 01:21:46 by yamajid          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME 	=	Identify
+NAME 	=	Serialize
 Run		=	c++
 FLAGS	=	-Wall -Wextra -Werror -std=c++98
 RM		=	rm -f
 
-SRCS 	=	 main.cpp Base.cpp A.cpp B.cpp C.cpp
+SRCS 	=	 main.cpp Serialize.cpp
 
 otherS = $(SRCS:.cpp=.o)
 
