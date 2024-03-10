@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 23:43:24 by yamajid           #+#    #+#             */
-/*   Updated: 2024/03/09 22:38:21 by yamajid          ###   ########.fr       */
+/*   Updated: 2024/03/10 19:56:01 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <iomanip>
 #include <limits>
 #include <exception>
+#include <cctype>
 
 class ScalarConvert{
     private:

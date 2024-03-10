@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 00:35:30 by yamajid           #+#    #+#             */
-/*   Updated: 2024/03/10 01:24:25 by yamajid          ###   ########.fr       */
+/*   Updated: 2024/03/10 17:02:53 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ Serialize::Serialize(Serialize const & src){
 }
 
 Serialize & Serialize::operator=(Serialize const & src){
+    if (this != &src){}
     return *this;
 }
 
