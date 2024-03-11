@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 23:42:44 by yamajid           #+#    #+#             */
-/*   Updated: 2024/03/10 22:04:20 by yamajid          ###   ########.fr       */
+/*   Updated: 2024/03/11 02:02:42 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,54 +50,82 @@ void cast_to_char(long & i){
     return ;
 }
 
-void cast_to_int(long & i)
-{
-    if (i >= std::numeric_limits<int>::min() && i <= std::numeric_limits<int>::max())
-    {
-        int tmp = i;
-        std::cout << "int: " << tmp << std::endl;
-    }
-    else
-        std::cout << "int: impossible" << std::endl;
-}
-
 
 int is_digit(std::string & str){
-    for (size_t i = 0; i < str.length(); i++)
+    int i = 0;
+    if (str[i] != '-' && str[i] != '+')
+        return 0;
+    else
     {
-        if (!isdigit(str[i]))
-            return 0;
+        for (i = 1; i < str.length(); i++)
+        {
+            if ((!isdigit(str[i])))
+                return 0;
+        }
     }
     return 1;
 }
 
 
 int is_float(std::string & str){
-    for (size_t i = 0; i < str.length(); i++)
+    int i = 0;
+    if (str[i] == '-' || str[i] == '+' || isdigit(str[i]))
     {
-        if (!isdigit(str[i]) && str[i] != '.')
+        for (i = 1; i < str.length(); i++)
+        {
+            if ((!isdigit(str[i]) && str[i] != '.'))
             {
-                if (((str[i] == 'f' || str[i] == 'F') && str[i + 1] == '\0'))
+
+                if (str[i] == 'f' || str[i] == 'F')
                     return 1;
-                return 0;
+                else
+                    return 0;
             }
+        }   
     }
+    else if (str.at(str.length()  ) == 'f' || str.at(str.length()) == 'F')
+        return 1;
     return 0; 
 }
 
 int is_double(std::string & str){
-    for (size_t i = 0; i < str.length(); i++)
-        if (!isdigit(str[i]) && str[i] != '.')
-                return 0;
+    int i = 0;
+    if (str[i] == '-' || str[i] == '+' || isdigit(str[i]))
+    {
+        for (i = 1; i < str.length(); i++)
+        {
+            if ((!isdigit(str[i]) && str[i] != '.'))
+                    return 0;
+        }   
+    }
     return 1; 
 }
 
 int is_char(std::string & str){
-    if (str.length() == 1 && isprint(str[0]))
+    if (str.length() == 1 && isprint(str[0]) && !isdigit(str[0]))
         return 1;
-    else
-        std::cout << "non displayable" << std::endl;
     return 0;
+}
+
+void print_nan(){
+    std::cout << "char: impossible " << std::endl;
+    std::cout << "int: impossible " << std::endl;
+    std::cout << "float: nanf" << std::endl;
+    std::cout << "double: nan" << std::endl;
+}
+
+void print_inf(){
+    std::cout << "char: impossible " << std::endl;
+    std::cout << "int: impossible " << std::endl;
+    std::cout << "float: inff" << std::endl;
+    std::cout << "double: inf" << std::endl;
+}
+
+void print__inf(){
+    std::cout << "char: impossible " << std::endl;
+    std::cout << "int: impossible " << std::endl;
+    std::cout << "float: -inff" << std::endl;
+    std::cout << "double: -inf" << std::endl;
 }
 
 void ScalarConvert::convert(std::string & str){
@@ -105,6 +133,16 @@ void ScalarConvert::convert(std::string & str){
         
         if (!str.empty())
         {
+            if (str == "nan" || str == "nanf" || str == "+inf" || str == "+inff" || str == "-inf" || str == "-inff")
+            {
+                if (str == "nan" || str == "nanf")
+                    print_nan();
+                else if (str == "+inf" || str == "+inff")
+                    print_inf();
+                else if (str == "-inf" || str == "-inff")
+                    print__inf();
+                return ;
+            }
             if (is_char(str))
             {
                 std::cout << "char: " << "'" << str << "'" << std::endl;
@@ -132,16 +170,22 @@ void ScalarConvert::convert(std::string & str){
             }
             else if (is_float(str) == 1)
             {
-                float f;
+                float f = 0;
                 try{
-                    if (((f = std::stof(str)) >= std::numeric_limits<float>::min())
-                        && ((f = std::stof(str)) <= std::numeric_limits<float>::max())){
+                    f = std::stof(str);
+                    if (f >= std::numeric_limits<int>::min() && f <= std::numeric_limits<int>::max())
+                    {
                         long k = static_cast<long>(f);
                         cast_to_char(k);
-                        cast_to_int(k);
-                        std::cout << "float: " << std::setprecision(1) << std::fixed << f << "f" << std::endl;
-                        std::cout << "double: " << std::setprecision(1) << std::fixed << static_cast<double>(f) << std::endl;
+                        std::cout << "int: " << static_cast<int>(f) << std::endl;
                     }
+                    else
+                    {
+                        std::cout << "char: impossible " << std::endl;
+                        std::cout << "int: impossible " << std::endl;
+                    }
+                    std::cout << "float: " << std::setprecision(1) << std::fixed << f << "f" << std::endl;
+                    std::cout << "double: " << std::setprecision(1) << std::fixed << static_cast<double>(f) << std::endl;
                 }
                 catch(const std::exception & e){
                     std::cout << "float: impossible " << std::endl;
@@ -149,29 +193,31 @@ void ScalarConvert::convert(std::string & str){
             }
             else if (is_double(str) == 1)
             {
-                double d;
+                double d = 0;
                 try{
-                    if (((d = std::stod(str)) >= std::numeric_limits<double>::min())
-                        && ((d = std::stod(str)) <= std::numeric_limits<double>::max())){
-                        if (d >= std::numeric_limits<int>::min() && d <= std::numeric_limits<int>::max())
-                        {
-                            long k = static_cast<long>(d);
-                            cast_to_char(k);
-                            std::cout << "int: " << static_cast<int>(d) << std::endl;
-                        }
-                        else
-                        {
-                            std::cout << "char: impossible " << std::endl;
-                            std::cout << "int: impossible " << std::endl;
-                        }
-                        std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d)  << "f" << std::endl;
-                        std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
+                    d = std::stod(str);
+                    if (d >= std::numeric_limits<int>::min() && d <= std::numeric_limits<int>::max())
+                    {
+                        long k = static_cast<long>(d);
+                        cast_to_char(k);
+                        std::cout << "int: " << static_cast<int>(d) << std::endl;
                     }
+                    else
+                    {
+                        std::cout << "char: impossible " << std::endl;
+                        std::cout << "int: impossible " << std::endl;
+                    }
+                    std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d)  << "f" << std::endl;
+                    std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
                 }
                 catch(const std::exception & e){
                     std::cout << "double: impossible " << std::endl;
                 }
             }
+            else
+                std::cout << "non displayable " << std::endl;
         }
+        else
+            std::cout << "empty string" << std::endl;
         return ;
 }
