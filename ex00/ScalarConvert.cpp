@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 23:42:44 by yamajid           #+#    #+#             */
-/*   Updated: 2024/03/11 15:34:33 by yamajid          ###   ########.fr       */
+/*   Updated: 2024/03/11 21:20:10 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 ScalarConvert::ScalarConvert() {
 }
+
 
 ScalarConvert::~ScalarConvert() {
 }
@@ -31,82 +32,6 @@ ScalarConvert::ScalarConvert(ScalarConvert const & obj) {
 const char *ScalarConvert::ScalarConvertException::what() const throw(){
     return "Non displayable";
 }
-
-
-
-void cast_to_char(long & i){
-    int tmp;
-    if (i >= std::numeric_limits<int>::min() && i <= std::numeric_limits<int>::max()){
-        tmp = i;
-        if (i >= 32 && i <= 126)
-        {
-            char c = static_cast<char>(i);
-            std::cout << "char: " << "'" << c << "'"  <<std::endl;
-            return ;
-        }
-        else
-            std::cout << "char: impossible " << std::endl;
-    }
-    return ;
-}
-
-
-int is_digit(std::string & str){
-    int i = 0;
-    if (str[i] != '-' && str[i] != '+')
-        return 0;
-    else
-    {
-        for (i = 1; i < str.length(); i++)
-        {
-            if ((!isdigit(str[i])))
-                return 0;
-        }
-    }
-    return 1;
-}
-
-
-int is_float(std::string & str){
-    int i = 0;
-    if (str[i] == '-' || str[i] == '+' || isdigit(str[i]))
-    {
-        for (i = 1; i < str.length(); i++)
-        {
-            if ((!isdigit(str[i]) && str[i] != '.'))
-            {
-
-                if (str[i] == 'f' || str[i] == 'F')
-                    return 1;
-                else
-                    return 0;
-            }
-        }   
-    }
-    else if (str.at(str.length()  ) == 'f' || str.at(str.length()) == 'F')
-        return 1;
-    return 0; 
-}
-
-int is_double(std::string & str){
-    int i = 0;
-    if (str[i] == '-' || str[i] == '+' || isdigit(str[i]))
-    {
-        for (i = 1; i < str.length(); i++)
-        {
-            if ((!isdigit(str[i]) && str[i] != '.'))
-                    return 0;
-        }   
-    }
-    return 1; 
-}
-
-int is_char(std::string & str){
-    if (str.length() == 1 && isprint(str[0]) && !isdigit(str[0]))
-        return 1;
-    return 0;
-}
-
 void print_nan(){
     std::cout << "char: impossible " << std::endl;
     std::cout << "int: impossible " << std::endl;
@@ -117,8 +42,8 @@ void print_nan(){
 void print_inf(){
     std::cout << "char: impossible " << std::endl;
     std::cout << "int: impossible " << std::endl;
-    std::cout << "float: inff" << std::endl;
-    std::cout << "double: inf" << std::endl;
+    std::cout << "float: +inff" << std::endl;
+    std::cout << "double: +inf" << std::endl;
 }
 
 void print__inf(){
@@ -128,10 +53,194 @@ void print__inf(){
     std::cout << "double: -inf" << std::endl;
 }
 
+
+
+
+
+int is_digit(std::string & str){
+    int i = 0;
+    if (str[i] == '-' || str[i] == '+' || isdigit(str[i]))
+    {
+        for (i = 1; i < str.length(); i++)
+        {
+            if (!(isdigit(str[i])))
+                    return 0;
+        }   
+    }
+    return 1;
+}
+
+
+
+
+
+
+void is_int(std::string & str)
+{
+    double d = 0;
+
+    d = std::strtod(str.c_str(), NULL);
+    if (d > std::numeric_limits<int>::max() || d < std::numeric_limits<int>::min())
+    {
+        std::cout << "char: impossible " << std::endl;
+        std::cout << "int: impossible " << std::endl;
+        std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
+        std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
+    }
+    else
+    {
+        if (d >= 32 && d <= 126)
+            std::cout << "char: " << "'" << static_cast<char>(d) << "'" << std::endl;
+        else
+            std::cout << "char: impossible" << std::endl;
+        std::cout << "int: " << static_cast<int>(d) << std::endl;
+        std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
+        std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
+    }
+}
+
+void is_char(std::string & str){
+    try{
+        if (isprint(str[0]) || isdigit(str[0])){
+            if (isdigit(str[0]))
+                is_int(str);
+            else
+            {
+                std::cout << "char: " << "'" << str << "'" << std::endl;
+                std::cout << "int: " << static_cast<int>(str[0]) << std::endl;
+                std::cout << "float: " << std::setprecision(1) << std::fixed <<  static_cast<float>(str[0]) << "f" << std::endl;
+                std::cout << "double: " << std::setprecision(1) << std::fixed << static_cast<double>(str[0]) << std::endl;
+            } 
+        }
+        else
+            throw std::exception();
+    }
+    catch(const std::exception & e){
+        std::cout << "char: Non displayable" << std::endl;
+    }
+}
+int parse_float(std::string & str)
+{
+    int i = 0;
+    int j = 0;
+    if (str[i] == '-' || str[i] == '+' || isdigit(str[i]))
+    {
+        for (i = 1; i < str.length(); i++)
+        {
+            if (str[i] == '.')
+            {
+                j = 1;
+                i++;
+                break ;
+            }
+        }   
+    }
+    if (!isdigit(str[i]))
+        return 0;
+    for(i = i; i < str.length(); i++)
+    {
+        if (!isdigit(str[i]))
+        {
+            if ((str[i] == 'f' && str[i + 1] =='\0') && j == 1)
+                return 1;
+            else
+                return 0;
+        }
+            
+    }
+    return 0; 
+}
+
+void is_float(std::string & str){
+    double d = 0;
+
+
+    d = std::strtod(str.c_str(), NULL);
+    if (d > std::numeric_limits<int>::max() || d < std::numeric_limits<int>::min())
+    {
+        std::cout << "char: impossible " << std::endl;
+        std::cout << "int: impossible " << std::endl;
+        std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
+        std::cout << "double: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << std::endl;
+    }
+    else
+    {
+        if (d >= 32 && d <= 126)
+            std::cout << "char: " << "'" << static_cast<char>(d) << "'" << std::endl;
+        else
+            std::cout << "char: impossible" << std::endl;
+        std::cout << "int: " << static_cast<int>(d) << std::endl;
+        std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
+        std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
+    }
+}
+
+int parse_double(std::string & str){
+    int i = 0;
+    int j = 0;
+    if (str[i] == '-' || str[i] == '+' || isdigit(str[i]))
+    {
+        for (i = 1; i < str.length(); i++)
+        {
+            if (str[i] == '.')
+            {
+                j = 1;
+                i++;
+                break ;
+            }
+        }   
+    }
+    for(i = i; i < str.length(); i++)
+    {
+        if (!isdigit(str[i]))
+            return 0;
+            
+    }
+    if (str[i] == '\0' && j == 1)
+        return 1;
+    return 0; 
+}
+
+void is_double(std::string & str)
+{
+    double d = 0;
+
+    d = std::strtod(str.c_str(), NULL);
+    if (d > std::numeric_limits<int>::max() || d < std::numeric_limits<int>::min())
+    {
+        std::cout << "char: impossible " << std::endl;
+        std::cout << "int: impossible " << std::endl;
+        std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
+        std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
+    }
+    else
+    {
+        if (d >= 32 && d <= 126)
+            std::cout << "char: " << "'" << static_cast<char>(d) << "'" << std::endl;
+        else
+            std::cout << "char: impossible" << std::endl;
+        std::cout << "int: " << static_cast<int>(d) << std::endl;
+        std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
+        std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
+    }
+}
+
+int is_string(std::string & str){
+    int i = 0;
+    if (str.length() == 1 && str[0] == ' ')
+        return 1;
+    for (i = 0; i < str.length(); i++)
+    {
+        if (str[i] != '.' && str[i] != 'f' && !isdigit(str[i]) && str[i] != '-' && str[i] != '+')
+            return 0;
+    }
+    return 1;
+}
+
 void ScalarConvert::convert(std::string & str){
         int tmp = 0;
         
-        if (!str.empty())
+        if (!str.empty() && is_string(str) == 1)
         {
             if (str == "nan" || str == "nanf" || str == "+inf" || str == "+inff" || str == "-inf" || str == "-inff")
             {
@@ -143,81 +252,21 @@ void ScalarConvert::convert(std::string & str){
                     print__inf();
                 return ;
             }
-            if (is_char(str))
-            {
-                std::cout << "char: " << "'" << str << "'" << std::endl;
-                std::cout << "int: " << static_cast<int>(str[0]) << std::endl;
-                std::cout << "float: " << std::setprecision(1) << std::fixed <<  static_cast<float>(str[0]) << "f" << std::endl;
-                std::cout << "double: " << std::setprecision(1) << std::fixed << static_cast<double>(str[0]) << std::endl;
-            }
+            if (str.length() == 1)
+                is_char(str);
             else if (is_digit(str) == 1)
+                is_int(str);
+            else if (parse_float(str) == 1)
+                is_float(str);
+            else if (parse_double(str) == 1)
             {
-                long i = 0;
-                try{
-                    if (((i = std::stoi(str)) >= std::numeric_limits<int>::min())
-                        && ((i = std::stoi(str)) <= std::numeric_limits<int>::max())){
-                        tmp = i;
-                        cast_to_char(i);
-                        std::cout << "int: " << tmp << std::endl;
-                        std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(tmp) << "f" << std::endl;
-                        std::cout << "double: " << std::setprecision(1) << std::fixed <<  static_cast<double>(tmp) << std::endl;
-                    }
-                }
-                catch(const std::exception & e){
-                    std::cout << "int: impossible " << std::endl;
-                    
-                }
-            }
-            else if (is_float(str) == 1)
-            {
-                float f = 0;
-                try{
-                    f = std::stof(str);
-                    if (f >= std::numeric_limits<int>::min() && f <= std::numeric_limits<int>::max())
-                    {
-                        long k = static_cast<long>(f);
-                        cast_to_char(k);
-                        std::cout << "int: " << static_cast<int>(f) << std::endl;
-                    }
-                    else
-                    {
-                        std::cout << "char: impossible " << std::endl;
-                        std::cout << "int: impossible " << std::endl;
-                    }
-                    std::cout << "float: " << std::setprecision(1) << std::fixed << f << "f" << std::endl;
-                    std::cout << "double: " << std::setprecision(1) << std::fixed << static_cast<double>(f) << std::endl;
-                }
-                catch(const std::exception & e){
-                    std::cout << "float: impossible " << std::endl;
-                }
-            }
-            else if (is_double(str) == 1)
-            {
-                double d = 0;
-                try{
-                    d = std::stod(str);
-                    if (d >= std::numeric_limits<int>::min() && d <= std::numeric_limits<int>::max())
-                    {
-                        long k = static_cast<long>(d);
-                        cast_to_char(k);
-                        std::cout << "int: " << static_cast<int>(d) << std::endl;
-                    }
-                    else
-                    {
-                        std::cout << "char: impossible " << std::endl;
-                        std::cout << "int: impossible " << std::endl;
-                    }
-                    std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d)  << "f" << std::endl;
-                    std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
-                }
-                catch(const std::exception & e){
-                    std::cout << "double: impossible " << std::endl;
-                }
+                is_double(str);
+                std::cout << "double:" << std::endl;
             }
             else
                 std::cout << "non displayable " << std::endl;
         }
         else
-            std::cout << "empty string" << std::endl;
+            std::cout << "Error: invalid input" << std::endl;
         return ;
 }
