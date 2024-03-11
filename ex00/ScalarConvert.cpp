@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 23:42:44 by yamajid           #+#    #+#             */
-/*   Updated: 2024/03/11 21:20:10 by yamajid          ###   ########.fr       */
+/*   Updated: 2024/03/11 22:25:32 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,6 @@ int is_digit(std::string & str){
     }
     return 1;
 }
-
-
-
-
-
 
 void is_int(std::string & str)
 {
@@ -151,29 +146,6 @@ int parse_float(std::string & str)
     return 0; 
 }
 
-void is_float(std::string & str){
-    double d = 0;
-
-
-    d = std::strtod(str.c_str(), NULL);
-    if (d > std::numeric_limits<int>::max() || d < std::numeric_limits<int>::min())
-    {
-        std::cout << "char: impossible " << std::endl;
-        std::cout << "int: impossible " << std::endl;
-        std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
-        std::cout << "double: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << std::endl;
-    }
-    else
-    {
-        if (d >= 32 && d <= 126)
-            std::cout << "char: " << "'" << static_cast<char>(d) << "'" << std::endl;
-        else
-            std::cout << "char: impossible" << std::endl;
-        std::cout << "int: " << static_cast<int>(d) << std::endl;
-        std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
-        std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
-    }
-}
 
 int parse_double(std::string & str){
     int i = 0;
@@ -201,17 +173,25 @@ int parse_double(std::string & str){
     return 0; 
 }
 
-void is_double(std::string & str)
-{
+
+void is_float_or_double(std::string & str, int i){
     double d = 0;
+
 
     d = std::strtod(str.c_str(), NULL);
     if (d > std::numeric_limits<int>::max() || d < std::numeric_limits<int>::min())
     {
         std::cout << "char: impossible " << std::endl;
         std::cout << "int: impossible " << std::endl;
-        std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
-        std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
+        if (i == 1){
+            std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
+            std::cout << "double: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << std::endl;
+        }
+        else
+        {
+            std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
+            std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
+        }
     }
     else
     {
@@ -219,9 +199,17 @@ void is_double(std::string & str)
             std::cout << "char: " << "'" << static_cast<char>(d) << "'" << std::endl;
         else
             std::cout << "char: impossible" << std::endl;
-        std::cout << "int: " << static_cast<int>(d) << std::endl;
-        std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
-        std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
+        if (i == 1){
+            std::cout << "int: " << static_cast<int>(d) << std::endl;
+            std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
+            std::cout << "double: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << std::endl;
+        }
+        else
+        {
+            std::cout << "int: " << static_cast<int>(d) << std::endl;
+            std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
+            std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
+        }
     }
 }
 
@@ -240,7 +228,7 @@ int is_string(std::string & str){
 void ScalarConvert::convert(std::string & str){
         int tmp = 0;
         
-        if (!str.empty() && is_string(str) == 1)
+        if (!str.empty())
         {
             if (str == "nan" || str == "nanf" || str == "+inf" || str == "+inff" || str == "-inf" || str == "-inff")
             {
@@ -252,16 +240,20 @@ void ScalarConvert::convert(std::string & str){
                     print__inf();
                 return ;
             }
+            if (is_string(str) == 0)
+            {
+                std::cout << "Error: invalid input" << std::endl;
+                return ;
+            }
             if (str.length() == 1)
                 is_char(str);
             else if (is_digit(str) == 1)
                 is_int(str);
-            else if (parse_float(str) == 1)
-                is_float(str);
-            else if (parse_double(str) == 1)
-            {
-                is_double(str);
-                std::cout << "double:" << std::endl;
+            else if (parse_float(str) == 1 || parse_double(str) == 1){
+                if (parse_float(str) == 1)
+                    is_float_or_double(str, 1);
+                else
+                    is_float_or_double(str, 0);
             }
             else
                 std::cout << "non displayable " << std::endl;
