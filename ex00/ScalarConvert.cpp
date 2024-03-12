@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 23:42:44 by yamajid           #+#    #+#             */
-/*   Updated: 2024/03/11 22:25:32 by yamajid          ###   ########.fr       */
+/*   Updated: 2024/03/12 03:05:12 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,6 @@ ScalarConvert::ScalarConvert(ScalarConvert const & obj) {
     *this = obj;
 }
 
-
-const char *ScalarConvert::ScalarConvertException::what() const throw(){
-    return "Non displayable";
-}
 void print_nan(){
     std::cout << "char: impossible " << std::endl;
     std::cout << "int: impossible " << std::endl;
@@ -53,10 +49,6 @@ void print__inf(){
     std::cout << "double: -inf" << std::endl;
 }
 
-
-
-
-
 int is_digit(std::string & str){
     int i = 0;
     if (str[i] == '-' || str[i] == '+' || isdigit(str[i]))
@@ -65,8 +57,10 @@ int is_digit(std::string & str){
         {
             if (!(isdigit(str[i])))
                     return 0;
-        }   
+        }
     }
+    else
+        return 0;
     return 1;
 }
 
@@ -87,7 +81,7 @@ void is_int(std::string & str)
         if (d >= 32 && d <= 126)
             std::cout << "char: " << "'" << static_cast<char>(d) << "'" << std::endl;
         else
-            std::cout << "char: impossible" << std::endl;
+            std::cout << "char: Non displayable" << std::endl;
         std::cout << "int: " << static_cast<int>(d) << std::endl;
         std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
         std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
@@ -95,102 +89,57 @@ void is_int(std::string & str)
 }
 
 void is_char(std::string & str){
-    try{
-        if (isprint(str[0]) || isdigit(str[0])){
-            if (isdigit(str[0]))
-                is_int(str);
-            else
-            {
-                std::cout << "char: " << "'" << str << "'" << std::endl;
-                std::cout << "int: " << static_cast<int>(str[0]) << std::endl;
-                std::cout << "float: " << std::setprecision(1) << std::fixed <<  static_cast<float>(str[0]) << "f" << std::endl;
-                std::cout << "double: " << std::setprecision(1) << std::fixed << static_cast<double>(str[0]) << std::endl;
-            } 
-        }
+    if (isprint(str[0]) || isdigit(str[0])){
+        if (isdigit(str[0]))
+            is_int(str);
         else
-            throw std::exception();
+        {
+            std::cout << "char: " << "'" << str << "'" << std::endl;
+            std::cout << "int: " << static_cast<int>(str[0]) << std::endl;
+            std::cout << "float: " << std::setprecision(1) << std::fixed <<  static_cast<float>(str[0]) << "f" << std::endl;
+            std::cout << "double: " << std::setprecision(1) << std::fixed << static_cast<double>(str[0]) << std::endl;
+        } 
     }
-    catch(const std::exception & e){
+    else
         std::cout << "char: Non displayable" << std::endl;
-    }
 }
 int parse_float(std::string & str)
 {
-    int i = 0;
     int j = 0;
-    if (str[i] == '-' || str[i] == '+' || isdigit(str[i]))
+
+    for (size_t i = 0 ; i < str.length(); i++)
     {
-        for (i = 1; i < str.length(); i++)
-        {
+        if (i == 0 && str[i] == '-' || str[i] == '+' || str[i] == '.'){
             if (str[i] == '.')
-            {
-                j = 1;
-                i++;
-                break ;
-            }
-        }   
-    }
-    if (!isdigit(str[i]))
-        return 0;
-    for(i = i; i < str.length(); i++)
-    {
-        if (!isdigit(str[i]))
-        {
-            if ((str[i] == 'f' && str[i + 1] =='\0') && j == 1)
-                return 1;
-            else
-                return 0;
+                j++;
+            i++;
         }
-            
-    }
-    return 0; 
-}
-
-
-int parse_double(std::string & str){
-    int i = 0;
-    int j = 0;
-    if (str[i] == '-' || str[i] == '+' || isdigit(str[i]))
-    {
-        for (i = 1; i < str.length(); i++)
-        {
-            if (str[i] == '.')
-            {
-                j = 1;
-                i++;
-                break ;
-            }
-        }   
-    }
-    for(i = i; i < str.length(); i++)
-    {
-        if (!isdigit(str[i]))
+        if ((str[i] == 'f' && ((i == str.length() - 1 &&  j == 1))))
+            return 1;
+        else if ((isdigit(str[i]) && ((i == str.length() - 1) && j == 1)))
             return 0;
-            
     }
-    if (str[i] == '\0' && j == 1)
-        return 1;
-    return 0; 
+    return -1;
 }
 
 
 void is_float_or_double(std::string & str, int i){
     double d = 0;
 
-
+    
     d = std::strtod(str.c_str(), NULL);
     if (d > std::numeric_limits<int>::max() || d < std::numeric_limits<int>::min())
     {
         std::cout << "char: impossible " << std::endl;
         std::cout << "int: impossible " << std::endl;
         if (i == 1){
-            std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
-            std::cout << "double: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << std::endl;
+            std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << "f" << std::endl;
+            std::cout << "double: " << std::setprecision(15) << static_cast<float>(d) << std::endl;
         }
         else
         {
-            std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
-            std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
+            std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << "f" << std::endl;
+            std::cout << "double: " << std::setprecision(15) << d << std::endl;
         }
     }
     else
@@ -201,14 +150,14 @@ void is_float_or_double(std::string & str, int i){
             std::cout << "char: impossible" << std::endl;
         if (i == 1){
             std::cout << "int: " << static_cast<int>(d) << std::endl;
-            std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
-            std::cout << "double: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << std::endl;
+            std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << "f" << std::endl;
+            std::cout << "double: " << std::setprecision(15) << static_cast<float>(d) << std::endl;
         }
         else
         {
             std::cout << "int: " << static_cast<int>(d) << std::endl;
-            std::cout << "float: " << std::setprecision(1) << std::fixed << static_cast<float>(d) << "f" << std::endl;
-            std::cout << "double: " << std::setprecision(1) << std::fixed << d << std::endl;
+            std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << "f" << std::endl;
+            std::cout << "double: " << std::setprecision(15) << d << std::endl;
         }
     }
 }
@@ -228,37 +177,33 @@ int is_string(std::string & str){
 void ScalarConvert::convert(std::string & str){
         int tmp = 0;
         
-        if (!str.empty())
+        if (str.empty()){
+            std::cerr << "Error: invalid input" << std::endl;
+            return ;
+        }       
+        if (str == "nan" || str == "nanf" || str == "+inf" || str == "+inff" || str == "-inf" || str == "-inff")
         {
-            if (str == "nan" || str == "nanf" || str == "+inf" || str == "+inff" || str == "-inf" || str == "-inff")
-            {
-                if (str == "nan" || str == "nanf")
-                    print_nan();
-                else if (str == "+inf" || str == "+inff")
-                    print_inf();
-                else if (str == "-inf" || str == "-inff")
-                    print__inf();
-                return ;
-            }
-            if (is_string(str) == 0)
-            {
-                std::cout << "Error: invalid input" << std::endl;
-                return ;
-            }
-            if (str.length() == 1)
-                is_char(str);
-            else if (is_digit(str) == 1)
-                is_int(str);
-            else if (parse_float(str) == 1 || parse_double(str) == 1){
-                if (parse_float(str) == 1)
-                    is_float_or_double(str, 1);
-                else
-                    is_float_or_double(str, 0);
-            }
-            else
-                std::cout << "non displayable " << std::endl;
+            if (str == "nan" || str == "nanf")
+                print_nan();
+            else if (str == "+inf" || str == "+inff")
+                print_inf();
+            else if (str == "-inf" || str == "-inff")
+                print__inf();
+            return ;
         }
+        if (str.length() == 1)
+            is_char(str);
+        else if (is_string(str) == 0){
+            std::cerr << "Error: invalid input" << std::endl;
+            return ;
+        }
+        else if (is_digit(str) == 1)
+            is_int(str);
+        else if (parse_float(str) == 1)
+            is_float_or_double(str, 1);
+        else if (parse_float(str) == 0)
+            is_float_or_double(str, 0);
         else
-            std::cout << "Error: invalid input" << std::endl;
+            std::cerr << "Error: invalid input" << std::endl;
         return ;
 }
