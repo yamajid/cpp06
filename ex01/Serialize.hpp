@@ -6,10 +6,11 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 00:35:33 by yamajid           #+#    #+#             */
-/*   Updated: 2024/03/10 01:20:39 by yamajid          ###   ########.fr       */
+/*   Updated: 2024/03/12 15:29:56 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#pragma once
 #include <iostream>
 
 struct Data {

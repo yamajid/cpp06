@@ -6,7 +6,7 @@
 #    By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/26 23:49:24 by yamajid           #+#    #+#              #
-#    Updated: 2024/03/09 02:08:25 by yamajid          ###   ########.fr        #
+#    Updated: 2024/03/13 01:46:09 by yamajid          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,10 @@ otherS = $(SRCS:.cpp=.o)
 
 all: $(NAME)
 
-$(NAME): $(otherS)
+%.o: %.cpp
+	$(Run) $(FLAGS) -c $< -o $@
+
+$(NAME): $(otherS) ScalarConvert.hpp
 	$(Run) $(FLAGS) -o $(NAME) $(otherS)
 
 clean:

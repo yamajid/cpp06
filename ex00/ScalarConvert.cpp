@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 23:42:44 by yamajid           #+#    #+#             */
-/*   Updated: 2024/03/12 03:05:12 by yamajid          ###   ########.fr       */
+/*   Updated: 2024/03/13 21:15:22 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ ScalarConvert::~ScalarConvert() {
 }
 
 ScalarConvert & ScalarConvert::operator=(ScalarConvert const & other) {
-    if (this != &other){}   
+    if (this != &other){}
     return *this;
 }
 
@@ -50,7 +50,7 @@ void print__inf(){
 }
 
 int is_digit(std::string & str){
-    int i = 0;
+    size_t i = 0;
     if (str[i] == '-' || str[i] == '+' || isdigit(str[i]))
     {
         for (i = 1; i < str.length(); i++)
@@ -106,22 +106,82 @@ void is_char(std::string & str){
 int parse_float(std::string & str)
 {
     int j = 0;
+    size_t i;
 
-    for (size_t i = 0 ; i < str.length(); i++)
+    for (i = 0 ; i < str.length(); i++)
     {
-        if (i == 0 && str[i] == '-' || str[i] == '+' || str[i] == '.'){
-            if (str[i] == '.')
-                j++;
+        if (i == 0 && (str[i] == '-' || str[i] == '+' || std::isdigit(str[i])))
             i++;
+        if (str[i] == '.')
+        {
+            if (j == 1)
+                return -1;
+                j++;
         }
-        if ((str[i] == 'f' && ((i == str.length() - 1 &&  j == 1))))
+        if (((str[i] == 'f' && (i == str.length() - 1)) && j == 1) || (str[i] == 'f' && (i == str.length() - 1)))
             return 1;
-        else if ((isdigit(str[i]) && ((i == str.length() - 1) && j == 1)))
+        else if ((std::isdigit(str[i]) && (i == str.length() - 1)) && j == 1)
             return 0;
     }
     return -1;
 }
 
+void check_for_value_inrange(double d, int i){
+    if (i == 1){
+            if (static_cast<float>(d) == static_cast<int>(d)){
+                std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << ".0f" << std::endl;
+                std::cout << "double: " << std::setprecision(15) << d << ".0" << std::endl;
+            }
+            else
+            {
+                std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << "f" << std::endl;
+                std::cout << "double: " << std::setprecision(15) << d << std::endl;
+            }
+            
+        }
+        else{
+            if (static_cast<double>(d) == static_cast<int>(d)){
+                std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << ".0f" << std::endl;
+                std::cout << "double: " << std::setprecision(15) << d << ".0" << std::endl;
+            }
+            else
+            {
+                std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << "f" << std::endl;
+                std::cout << "double: " << std::setprecision(15) << d << std::endl;
+            }
+        }
+}
+
+void check_for_value_outrange(double d, int i){
+    if (d >= 32 && d <= 126)
+            std::cout << "char: " << "'" << static_cast<char>(d) << "'" << std::endl;
+        else
+            std::cout << "char: impossible" << std::endl;
+    if (i == 1){
+        if (static_cast<float>(d) == static_cast<int>(d)){
+            std::cout << "int: " << static_cast<int>(d) << std::endl;
+            std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << ".0f" << std::endl;
+            std::cout << "double: " << std::setprecision(15) << d << ".0" << std::endl;
+        }
+        else{
+            std::cout << "int: " << static_cast<int>(d) << std::endl;
+            std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << "f" << std::endl;
+            std::cout << "double: " << std::setprecision(15) << d << std::endl;
+        }
+    }
+    else{
+        if (static_cast<double>(d) == static_cast<int>(d)){
+            std::cout << "int: " << static_cast<int>(d) << std::endl;
+            std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << ".0f" << std::endl;
+            std::cout << "double: " << std::setprecision(15) << d << ".0" << std::endl;
+        }
+        else{
+            std::cout << "int: " << static_cast<int>(d) << std::endl;
+            std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << "f" << std::endl;
+            std::cout << "double: " << std::setprecision(15) << d << std::endl;
+        }
+    }
+}
 
 void is_float_or_double(std::string & str, int i){
     double d = 0;
@@ -132,38 +192,14 @@ void is_float_or_double(std::string & str, int i){
     {
         std::cout << "char: impossible " << std::endl;
         std::cout << "int: impossible " << std::endl;
-        if (i == 1){
-            std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << "f" << std::endl;
-            std::cout << "double: " << std::setprecision(15) << static_cast<float>(d) << std::endl;
-        }
-        else
-        {
-            std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << "f" << std::endl;
-            std::cout << "double: " << std::setprecision(15) << d << std::endl;
-        }
+        check_for_value_inrange(d, i);
     }
     else
-    {
-        if (d >= 32 && d <= 126)
-            std::cout << "char: " << "'" << static_cast<char>(d) << "'" << std::endl;
-        else
-            std::cout << "char: impossible" << std::endl;
-        if (i == 1){
-            std::cout << "int: " << static_cast<int>(d) << std::endl;
-            std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << "f" << std::endl;
-            std::cout << "double: " << std::setprecision(15) << static_cast<float>(d) << std::endl;
-        }
-        else
-        {
-            std::cout << "int: " << static_cast<int>(d) << std::endl;
-            std::cout << "float: " << std::setprecision(7) << static_cast<float>(d) << "f" << std::endl;
-            std::cout << "double: " << std::setprecision(15) << d << std::endl;
-        }
-    }
+        check_for_value_outrange(d, i);
 }
 
 int is_string(std::string & str){
-    int i = 0;
+    size_t i = 0;
     if (str.length() == 1 && str[0] == ' ')
         return 1;
     for (i = 0; i < str.length(); i++)
@@ -175,7 +211,6 @@ int is_string(std::string & str){
 }
 
 void ScalarConvert::convert(std::string & str){
-        int tmp = 0;
         
         if (str.empty()){
             std::cerr << "Error: invalid input" << std::endl;
